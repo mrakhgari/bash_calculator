@@ -14,6 +14,10 @@ usage(){
 	echo "for sub holds the first input and subtracs the other inputs from it"
 	echo "for multply return multiply all of args"
 	echo "for devide return args[1]/args[2]"
+	echo "for power return args[1]^args[2]"
+	echo "for reminder return args[1]%args[2] ==> { Number = Quotient*‌Divider + Reminder }"
+	echo "for combination return Combination of the first input of the second input ==>  C( args[1] , args[2] ) "
+	echo "for permutation return Permutation of the first input of the second input ==>  P( args[1] , args[2] ) "
 }
 
 display(){ # show message.
@@ -51,6 +55,42 @@ divide(){ # divides the first input into the second input
 	display "divid" $(($1/$2))
 }
 
+power(){ # The first input to the power of the second input
+	display "$1 ^ $2" $(($1**$2))
+}
+
+reminder(){ # reminder of the first input to the second input
+	display "reminder of $1 to $2" $(($1%$2))
+}
+
+factorial(){ # factorial of a positive integer number
+	local res=1
+	for (( i=1; i<=$1; i++ )) do
+		res=$(($res*$i))
+	done
+	echo $res
+}
+
+combination(){ # combination of the first input of the second input e.g. : C(num1 , num2)
+	if [ $1 -le $2 ];then
+		local first_fact=$(factorial $1)
+		local second_fact=$(factorial $2)
+		local third_fact=$(factorial $(( $2-$1 )))
+		display "Combination( $1 , $2 )" $(( $second_fact/($first_fact*$third_fact) ))
+	else
+		display "Combination( $1 , $2 )" "0 (Not Defined)"
+	fi
+}
+
+permutation(){ # permutation of the first input of the second input e.g. : P(num1 , num2)
+	if [ $1 -le $2 ];then
+		local second_fact=$(factorial $2)
+		local third_fact=$(factorial $(( $2-$1 )))
+		display "Permutation( $1 , $2 )" $(( $second_fact/$third_fact ))
+	else
+		display "Permutation( $1 , $2 )" "0 (Not Defined)"
+	fi
+}
 
 ############################################################################################
 
@@ -110,5 +150,9 @@ case $com in
 	S) sub $@;;
 	m) multply $@;;
 	d) divide $@;;
+	p) power $@;;
+	r) reminder $@;;
+	c) combination $@;;
+	P) permutation $@;;
 	*) usage ; exit 1;;
 esac
